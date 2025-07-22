@@ -17,4 +17,5 @@
   overlays = import ./overlays; # nixpkgs overlays
 
   steam-optionx = pkgs.callPackage ./pkgs/steam-optionx { };
+  faugus-launcher = pkgs.callPackage ./pkgs/faugus-launcher { };
 }
