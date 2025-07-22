@@ -16,6 +16,7 @@
   modules = import ./modules; # NixOS modules
   overlays = import ./overlays; # nixpkgs overlays
 
-  steam-optionx = pkgs.callPackage ./pkgs/steam-optionx { };
   faugus-launcher = pkgs.callPackage ./pkgs/faugus-launcher { };
+  gupax = pkgs.callPackage ./pkgs/gupax { };
+  steam-optionx = pkgs.callPackage ./pkgs/steam-optionx { };
 }
