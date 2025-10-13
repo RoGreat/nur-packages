@@ -13,7 +13,6 @@
   libnotify,
   mangohud,
   nix-update-script,
-  pascube,
   pciutils,
   polkit,
   qt6Packages,
@@ -76,7 +75,6 @@ stdenv.mkDerivation (finalAttrs: {
           kmod
           libnotify
           mangohud
-          pascube
           pciutils
           polkit
         ]
