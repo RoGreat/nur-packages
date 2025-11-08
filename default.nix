@@ -18,6 +18,7 @@
 
   goverlay = pkgs.callPackage ./pkgs/goverlay { };
   gupax = pkgs.callPackage ./pkgs/gupax { };
+  gupaxx = pkgs.callPackage ./pkgs/gupaxx { };
   lenspect = pkgs.callPackage ./pkgs/lenspect { };
   pascube = pkgs.callPackage ./pkgs/pascube { };
   steam-optionx = pkgs.callPackage ./pkgs/steam-optionx { };
