@@ -5,6 +5,7 @@
   gobject-introspection,
   lib,
   libadwaita,
+  libsecret,
   meson,
   ninja,
   nix-update-script,
@@ -37,6 +38,7 @@ python3Packages.buildPythonApplication rec {
 
   buildInputs = [
     libadwaita
+    libsecret
   ];
 
   dependencies = with python3Packages; [
