@@ -36,6 +36,11 @@ rustPlatform.buildRustPackage (finalAttrs: {
   checkFlags = [
     # Test requires filesystem write outside of sandbox.
     "--skip disk::test::create_and_serde_gupax_p2pool_api"
+    # Tests require access to CA certificates
+    "--skip disk::tests::test::create_and_serde_gupax_p2pool_api"
+    "--skip helper::tests::test::public_api_deserialize"
+    "--skip helper::xvb::algorithm::test::test_manual_p2pool_mode"
+    "--skip helper::xvb::algorithm::test::test_manual_xvb_mode"
   ];
 
   nativeBuildInputs = [
@@ -62,8 +67,8 @@ rustPlatform.buildRustPackage (finalAttrs: {
   ];
 
   postInstall = ''
-    install -m 444 -D "images/icons/icon.png" "$out/share/icons/hicolor/256x256/apps/gupax.png"
-    install -m 444 -D "images/icons/icon@2x.png" "$out/share/icons/hicolor/1024x1024/apps/gupax.png"
+    install -m 444 -D "assets/images/icons/icon.png" "$out/share/icons/hicolor/256x256/apps/gupax.png"
+    install -m 444 -D "assets/images/icons/icon@2x.png" "$out/share/icons/hicolor/1024x1024/apps/gupax.png"
   '';
 
   desktopItems = [
@@ -80,8 +85,16 @@ rustPlatform.buildRustPackage (finalAttrs: {
     })
   ];
 
-  # Needed to get openssl-sys to use pkg-config.
-  OPENSSL_NO_VENDOR = 1;
+  env = {
+    # Needed to get openssl-sys to use pkg-config.
+    OPENSSL_NO_VENDOR = 1;
+    # Rust nightly
+    RUSTC_BOOTSTRAP = 1;
+    # cuprate-constants requires a SHA hash and git doesn't work here.
+    # cuprate rev used: https://github.com/gupax-io/gupax/blob/main/Cargo.lock
+    # build script: https://github.com/Cuprate/cuprate/blob/main/constants/build.rs
+    GITHUB_SHA = "adbded5ffa2cd472dea20e227466d6573588e6af";
+  };
 
   passthru.updateScript = nix-update-script { };
 
