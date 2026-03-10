@@ -21,17 +21,17 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "gupax";
-  version = "1.3.11";
+  version = "2.0.0";
 
   src = fetchFromGitHub {
     owner = "hinto-janai";
     repo = "gupax";
     rev = "v${finalAttrs.version}";
-    hash = "sha256-Ix7TEJmhbTRKJvDkv83fRJ6um3cbhpwgHv5c6SehEPk=";
+    hash = "sha256-dIuGp4qIdw5rGqAHIJoNpOABxo9CBMD8d06Kl0T5PNM=";
     leaveDotGit = true; # build.rs uses git
   };
 
-  cargoHash = "sha256-PILtRjQ8Vt20ObFhsb4qBoC8VEqHPshZvjLxqtfpj9Y=";
+  cargoHash = "sha256-BNwMD8XDOF50sa1vwVAbqJcAz3vxm33PG6IjWP4FFWk=";
 
   checkFlags = [
     # Test requires filesystem write outside of sandbox.
