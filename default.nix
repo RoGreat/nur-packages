@@ -18,5 +18,6 @@
 
   gupax = pkgs.callPackage ./pkgs/gupax { };
   sparrow-wifi = pkgs.callPackage ./pkgs/sparrow-wifi { };
+  spotify-dedup = pkgs.callPackage ./pkgs/spotify-dedup { };
   steam-optionx = pkgs.callPackage ./pkgs/steam-optionx { };
 }
