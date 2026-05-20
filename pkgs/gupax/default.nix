@@ -66,8 +66,8 @@ rustPlatform.buildRustPackage (finalAttrs: {
   ];
 
   postInstall = ''
-    install -Dm444 assets/images/icons/icon.png $out/share/icons/hicolor/256x256/apps/gupax.png
-    install -Dm444 assets/images/icons/icon@2x.png $out/share/icons/hicolor/1024x1024/apps/gupax.png
+    install -D assets/images/icons/icon.png $out/share/icons/hicolor/256x256/apps/gupax.png
+    install -D assets/images/icons/icon@2x.png $out/share/icons/hicolor/1024x1024/apps/gupax.png
   '';
 
   desktopItems = [

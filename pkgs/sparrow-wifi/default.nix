@@ -39,7 +39,7 @@ python3Packages.buildPythonApplication (finalAttrs: {
 
   installPhase = ''
     runHook preInstall
-    install -Dm555 sparrow-wifi.py $out/bin/sparrow-wifi
+    install -D sparrow-wifi.py $out/bin/sparrow-wifi
     modules=(
       "sparrowbluetooth"
       "sparrowcommon"
@@ -54,10 +54,10 @@ python3Packages.buildPythonApplication (finalAttrs: {
       "wirelessengine"
     )
     for module in "''${modules[@]}"; do
-      install -Dm444 $module.py $out/${python3Packages.python.sitePackages}/$module.py
+      install -D $module.py $out/${python3Packages.python.sitePackages}/$module.py
     done
     mkdir -p $out/share/icons/hicolor/64x64/apps
-    magick wifi_icon.png -background none -resize 64x64 -gravity center -extent 64x64 $out/share/icons/hicolor/64x64/apps/sparrow_wifi.png
+    magick wifi_icon.png -resize 64x64 -gravity center -extent 64x64 $out/share/icons/hicolor/64x64/apps/sparrow_wifi.png
     runHook postInstall
   '';
 
