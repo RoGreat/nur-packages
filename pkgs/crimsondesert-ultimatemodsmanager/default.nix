@@ -10,7 +10,7 @@
   xvfb,
 }:
 let
-  version = "0-unstable-2026-05-22";
+  version = "0-unstable-2026-05-23";
   src = fetchFromGitHub {
     owner = "RoGreat";
     repo = "CrimsonDesert-UltimateModsManager";
@@ -176,6 +176,12 @@ python3Packages.buildPythonApplication (finalAttrs: {
         $out/share/icons/hicolor/''${i}x''${i}/apps/cdumm.png
     done
     cp -a assets $out/${python3Packages.python.sitePackages}
+  '';
+
+  preFixup = ''
+    makeWrapperArgs+=(
+      --suffix PYTHONPATH : "$out/${python3Packages.python.sitePackages}:$PYTHONPATH"
+    )
   '';
 
   meta = {
