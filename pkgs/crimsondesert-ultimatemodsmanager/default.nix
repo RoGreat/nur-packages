@@ -1,7 +1,10 @@
 {
+  copyDesktopItems,
   fetchFromGitHub,
   fetchPypi,
+  imagemagick,
   lib,
+  makeDesktopItem,
   python3Packages,
   rustPlatform,
 }:
@@ -129,8 +132,32 @@ python3Packages.buildPythonApplication (finalAttrs: {
     pyside6-fluent-widgets
   ];
 
+  nativeBuildInputs = [
+    copyDesktopItems
+    imagemagick
+  ];
+
+  desktopItems = [
+    (makeDesktopItem {
+      name = "cdumm";
+      desktopName = "CDUMM";
+      icon = "cdumm";
+      exec = "cdumm";
+      comment = "Crimson Desert Ultimate Mods Manager";
+      categories = [ "Game" ];
+    })
+  ];
+
   postInstall = ''
-    cp -a src/cdumm/translations $out/${python3Packages.python.sitePackages}/cdumm/translations
+    mv src/cdumm/translations $out/${python3Packages.python.sitePackages}/cdumm
+    mv schemas $out/${python3Packages.python.sitePackages}
+    mv field_schema $out/${python3Packages.python.sitePackages}
+    for i in 16 24 48 64 96 128 256 512 1024; do
+      mkdir -p $out/share/icons/hicolor/''${i}x''${i}/apps
+      magick assets/cdumm-logo.png -resize ''${i}x''${i}  \
+        $out/share/icons/hicolor/''${i}x''${i}/apps/cdumm.png
+    done
+    mv assets $out/${python3Packages.python.sitePackages}
   '';
 
   doCheck = false;
