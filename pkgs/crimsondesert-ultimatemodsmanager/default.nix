@@ -141,6 +141,7 @@ python3Packages.buildPythonApplication (finalAttrs: {
     py7zr
     pyside6
     pyside6-fluent-widgets
+    websocket-client
     xxhash
   ];
 
