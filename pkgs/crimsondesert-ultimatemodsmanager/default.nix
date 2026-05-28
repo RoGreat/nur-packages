@@ -1,11 +1,12 @@
 {
   copyDesktopItems,
   fetchFromGitHub,
-  fetchPypi,
   fetchpatch2,
   imagemagick,
   lib,
   makeDesktopItem,
+  privatebin,
+  pyside6-fluent-widgets,
   python3Packages,
   rustPlatform,
   xvfb,
@@ -36,77 +37,6 @@ let
       cargoSetupHook
       maturinBuildHook
     ];
-  });
-
-  pysidesix-frameless-window = python3Packages.buildPythonPackage (finalAttrs: {
-    pname = "pysidesix-frameless-window";
-    version = "0.8.0";
-    pyproject = true;
-    src = fetchPypi {
-      inherit (finalAttrs) version;
-      pname = "pysidesix_frameless_window";
-      hash = "sha256-4gDkto7bGy4DqgDXbQ6LjR2vbyiaW5H7qXRXi2cArZQ=";
-    };
-    dependencies = with python3Packages; [ pyside6 ];
-    doCheck = false;
-    pythonImportsCheck = [ "qframelesswindow" ];
-    build-system = with python3Packages; [ setuptools ];
-    meta = {
-      description = "Frameless window based on PySide6";
-      homepage = "https://github.com/zhiyiYo/PyQt-Frameless-Window";
-      license = lib.licenses.gpl3Only;
-      maintainers = with lib.maintainers; [ RoGreat ];
-    };
-  });
-  pyside6-fluent-widgets = python3Packages.buildPythonPackage (finalAttrs: {
-    pname = "pyside6-fluent-widgets";
-    version = "1.11.2";
-    pyproject = true;
-    src = fetchPypi {
-      inherit (finalAttrs) version;
-      pname = "pyside6_fluent_widgets";
-      hash = "sha256-z0n/drmyrR3CTwcaGyo/Xwpn1632VZFQcd37c0LK8XU=";
-    };
-    build-system = with python3Packages; [ setuptools ];
-    dependencies = with python3Packages; [
-      darkdetect
-      pyside6
-      pysidesix-frameless-window
-    ];
-    doCheck = false;
-    pythonImportsCheck = [ "qfluentwidgets" ];
-    meta = {
-      description = "Fluent design widgets library based on PySide6";
-      homepage = "https://github.com/zhiyiYo/PyQt-Fluent-Widgets";
-      license = lib.licenses.gpl3Only;
-      maintainers = with lib.maintainers; [ RoGreat ];
-    };
-  });
-  privatebin = python3Packages.buildPythonPackage (finalAttrs: {
-    pname = "privatebin";
-    version = "0.3.0";
-    src = fetchFromGitHub {
-      owner = "Ravencentric";
-      repo = "privatebin";
-      tag = "v${finalAttrs.version}";
-      hash = "sha256-jydJJdC7N4fyawTeEUJJgPNbfSJfRU1xYjCRffx842k=";
-    };
-    pyproject = true;
-    build-system = with python3Packages; [ hatchling ];
-    dependencies = with python3Packages; [
-      base58
-      cryptography
-      httpx
-      msgspec
-    ];
-    doCheck = false;
-    pythonImportsCheck = [ "privatebin" ];
-    meta = {
-      description = "Python library for interacting with PrivateBin's v2 API";
-      homepage = "https://github.com/Ravencentric/privatebin";
-      license = lib.licenses.mit;
-      maintainers = with lib.maintainers; [ RoGreat ];
-    };
   });
 in
 python3Packages.buildPythonApplication (finalAttrs: {
