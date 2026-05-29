@@ -12,12 +12,12 @@
   xvfb,
 }:
 let
-  version = "3.3.14";
+  version = "3.3.15";
   src = fetchFromGitHub {
     owner = "faisalkindi";
     repo = "CrimsonDesert-UltimateModsManager";
     tag = "v${version}";
-    hash = "sha256-Blu+/CSDvCiXnQxmvFgn1WRIUgKMGEigZ7NuFnUcRfU=";
+    hash = "sha256-zHWt9MzTJA7WIfH7jWr144pyeohMnc8XjClnIVBaci8=";
   };
   cdumm-native = python3Packages.buildPythonPackage (finalAttrs: {
     inherit src version;
@@ -43,14 +43,6 @@ python3Packages.buildPythonApplication (finalAttrs: {
   inherit src version;
   pname = "crimsondesert-ultimatemodsmanager";
   pyproject = true;
-
-  patches = [
-    # https://github.com/faisalkindi/CrimsonDesert-UltimateModsManager/pull/123
-    (fetchpatch2 {
-      url = "https://github.com/faisalkindi/CrimsonDesert-UltimateModsManager/compare/022043f0eb683ee51a0a0f087368a4d26c0e393a...b17f9e792416a16cdd6df3c53140bd71eeb954a1.diff?full_index=1";
-      hash = "sha256-ddMmEcr3Tw6SY2qRdrXkd8d4dq4gXds7vMNCQuncPPU=";
-    })
-  ];
 
   build-system = with python3Packages; [
     setuptools
