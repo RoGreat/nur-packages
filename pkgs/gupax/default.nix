@@ -1,8 +1,7 @@
 {
-  autoPatchelfHook,
   copyDesktopItems,
+  cuprate,
   fetchFromGitHub,
-  git,
   lib,
   libGL,
   libx11,
@@ -14,7 +13,6 @@
   openssl,
   pkg-config,
   rustPlatform,
-  stdenv,
   wayland,
 }:
 
@@ -27,7 +25,6 @@ rustPlatform.buildRustPackage (finalAttrs: {
     repo = "gupax";
     tag = "v${finalAttrs.version}";
     hash = "sha256-BBFovEZwjZNcC8eEnp3IgQf70O1QCJ+tdwxHk+vUp1E=";
-    leaveDotGit = true; # build.rs uses git
   };
 
   cargoHash = "sha256-7Kew11N/rakHLhKBu+BUM3f4AP9xDZl1xARpbyqHCFY=";
@@ -43,31 +40,25 @@ rustPlatform.buildRustPackage (finalAttrs: {
   ];
 
   nativeBuildInputs = [
-    autoPatchelfHook
     copyDesktopItems
-    git
     pkg-config
   ];
 
   buildInputs = [
-    openssl
-    # https://github.com/NixOS/nixpkgs/issues/225963
-    stdenv.cc.cc.libgcc or null
-  ];
-
-  runtimeDependencies = [
+    cuprate
     libGL
     libx11
     libxcursor
     libxi
     libxkbcommon
     libxrandr
+    openssl
     wayland
   ];
 
   postInstall = ''
-    install -Dm444 assets/images/icons/icon.png $out/share/icons/hicolor/256x256/apps/gupax.png
-    install -Dm444 assets/images/icons/icon@2x.png $out/share/icons/hicolor/1024x1024/apps/gupax.png
+    install -D assets/images/icons/icon.png $out/share/icons/hicolor/256x256/apps/gupax.png
+    install -D assets/images/icons/icon@2x.png $out/share/icons/hicolor/1024x1024/apps/gupax.png
   '';
 
   desktopItems = [
@@ -77,19 +68,17 @@ rustPlatform.buildRustPackage (finalAttrs: {
       icon = "gupax";
       exec = "gupax";
       comment = "P2Pool and XMRig";
-      categories = [ "Network" ];
+      categories = [ "Utility" ];
     })
   ];
+
+  doCheck = false;
 
   env = {
     # Needed to get openssl-sys to use pkg-config.
     OPENSSL_NO_VENDOR = 1;
-    # Enable Rust nightly.
+    # Use Rust nightly.
     RUSTC_BOOTSTRAP = 1;
-    # cuprate-constants requires a SHA hash and git doesn't work here.
-    # cuprate rev used: https://github.com/gupax-io/gupax/blob/main/Cargo.lock
-    # build script: https://github.com/Cuprate/cuprate/blob/main/constants/build.rs
-    GITHUB_SHA = "aa35ebdcb1a44dd11d778d50f6d32234c8802803";
   };
 
   meta = {

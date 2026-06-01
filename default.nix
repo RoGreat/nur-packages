@@ -30,7 +30,9 @@ rec {
     inherit (python3Packages) privatebin pyside6-fluent-widgets;
   };
   cuprate = pkgs.callPackage ./pkgs/cuprate { };
-  gupax = pkgs.callPackage ./pkgs/gupax { };
+  gupax = pkgs.callPackage ./pkgs/gupax {
+    inherit cuprate;
+  };
   sparrow-wifi = pkgs.callPackage ./pkgs/sparrow-wifi { };
   steam-optionx = pkgs.callPackage ./pkgs/steam-optionx { };
 }
