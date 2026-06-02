@@ -95,7 +95,6 @@ rustPlatform.buildRustPackage (finalAttrs: {
   meta = {
     description = "GUI Uniting P2Pool And XMRig";
     homepage = "https://gupax.io";
-    changelog = "https://github.com/hinto-janai/gupax/releases/tag/${finalAttrs.src.tag}";
     license = lib.licenses.gpl3Plus;
     maintainers = with lib.maintainers; [ RoGreat ];
     mainProgram = "gupax";
