@@ -1,8 +1,7 @@
 {
-  autoPatchelfHook,
   copyDesktopItems,
+  cuprate,
   fetchFromGitHub,
-  git,
   lib,
   libGL,
   libx11,
@@ -14,7 +13,6 @@
   openssl,
   pkg-config,
   rustPlatform,
-  stdenv,
   wayland,
 }:
 
@@ -23,11 +21,10 @@ rustPlatform.buildRustPackage (finalAttrs: {
   version = "2.0.1";
 
   src = fetchFromGitHub {
-    owner = "hinto-janai";
+    owner = "gupax-io";
     repo = "gupax";
-    tag = "v${finalAttrs.version}";
-    hash = "sha256-BBFovEZwjZNcC8eEnp3IgQf70O1QCJ+tdwxHk+vUp1E=";
-    leaveDotGit = true; # build.rs uses git
+    rev = "bb5827eb19d6494d1edb6eba7a991e71fd396f5e";
+    hash = "sha256-LEVJI3AWrr85g+X0Xt1uuvD1AtXB9UCHiacp4i0egP0=";
   };
 
   cargoHash = "sha256-7Kew11N/rakHLhKBu+BUM3f4AP9xDZl1xARpbyqHCFY=";
@@ -42,32 +39,36 @@ rustPlatform.buildRustPackage (finalAttrs: {
     "--skip helper::xvb::algorithm::test::test_manual_xvb_mode"
   ];
 
+  preBuild = ''
+    rm -f build.rs
+  '';
+
   nativeBuildInputs = [
-    autoPatchelfHook
     copyDesktopItems
-    git
     pkg-config
   ];
 
   buildInputs = [
     openssl
-    # https://github.com/NixOS/nixpkgs/issues/225963
-    stdenv.cc.cc.libgcc or null
-  ];
-
-  runtimeDependencies = [
-    libGL
-    libx11
-    libxcursor
-    libxi
-    libxkbcommon
-    libxrandr
-    wayland
   ];
 
   postInstall = ''
-    install -Dm444 assets/images/icons/icon.png $out/share/icons/hicolor/256x256/apps/gupax.png
-    install -Dm444 assets/images/icons/icon@2x.png $out/share/icons/hicolor/1024x1024/apps/gupax.png
+    install -D assets/images/icons/icon.png $out/share/icons/hicolor/256x256/apps/gupax.png
+    install -D assets/images/icons/icon@2x.png $out/share/icons/hicolor/1024x1024/apps/gupax.png
+  '';
+
+  postFixup = ''
+    patchelf $out/bin/gupax --set-rpath ${
+      lib.makeLibraryPath [
+        libGL
+        libx11
+        libxcursor
+        libxi
+        libxkbcommon
+        libxrandr
+        wayland
+      ]
+    };
   '';
 
   desktopItems = [
@@ -77,19 +78,19 @@ rustPlatform.buildRustPackage (finalAttrs: {
       icon = "gupax";
       exec = "gupax";
       comment = "P2Pool and XMRig";
-      categories = [ "Network" ];
+      categories = [ "Utility" ];
     })
   ];
 
   env = {
     # Needed to get openssl-sys to use pkg-config.
     OPENSSL_NO_VENDOR = 1;
-    # Enable Rust nightly.
+    # Use Rust nightly.
     RUSTC_BOOTSTRAP = 1;
-    # cuprate-constants requires a SHA hash and git doesn't work here.
-    # cuprate rev used: https://github.com/gupax-io/gupax/blob/main/Cargo.lock
-    # build script: https://github.com/Cuprate/cuprate/blob/main/constants/build.rs
-    GITHUB_SHA = "aa35ebdcb1a44dd11d778d50f6d32234c8802803";
+    # https://github.com/gupax-io/gupax/blob/main/build.rs
+    COMMIT = finalAttrs.src.rev;
+    # https://github.com/Cuprate/cuprate/blob/main/constants/build.rs
+    GITHUB_SHA = cuprate.src.rev;
   };
 
   meta = {
