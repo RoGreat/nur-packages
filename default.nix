@@ -16,6 +16,7 @@ rec {
   modules = import ./modules; # NixOS modules
   overlays = import ./overlays; # nixpkgs overlays
 
+  amethyst-mod-manager = pkgs.callPackage ./pkgs/amethyst-mod-manager { };
   crimsondesert-ultimatemodsmanager = pkgs.callPackage ./pkgs/crimsondesert-ultimatemodsmanager {
     inherit privatebin pyside6-fluent-widgets;
   };
