@@ -2,6 +2,7 @@
   fetchFromGitHub,
   gobject-introspection,
   lib,
+  libloot-python,
   python3Packages,
   wrapGAppsHook4,
 }:
@@ -22,25 +23,29 @@ python3Packages.buildPythonApplication (finalAttrs: {
     wrapGAppsHook4
   ];
 
-  dependencies = with python3Packages; [
+  # https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=amethyst-mod-manager
+  dependencies = [
+    libloot-python
+  ]
+  ++ (with python3Packages; [
     bsdiff4
-    # cairo
     cryptography
     customtkinter
     jeepney
     keyring
-    # libloot
     lz4
     msgpack
     pillow
     py7zr
+    pycairo
     rarfile
     requests
     tkinter
     websocket-client
     zstandard
-  ];
+  ]);
 
+  # https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=amethyst-mod-manager
   preInstall = ''
     pushd src > /dev/null
     find . -path "./appimage" -prune -o \
