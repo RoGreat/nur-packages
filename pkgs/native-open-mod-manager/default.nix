@@ -33,7 +33,7 @@ python3Packages.buildPythonApplication (finalAttrs: {
     libnotify
   ];
 
-  # https://github.com/Allexio/nomm/blob/main/build/flatpak/build-flatpak.sh
+  # https://github.com/Allexio/nomm/blob/main/build/aur/PKGBUILD
   dependencies = with python3Packages; [
     pygobject3
     pyyaml
@@ -66,15 +66,11 @@ python3Packages.buildPythonApplication (finalAttrs: {
     runHook postInstall
   '';
 
-  dontWrapGApps = true;
-
   preFixup = ''
-    makeWrapperArgs+=(
-        "''${gappsWrapperArgs[@]}"
+    gappsWrapperArgs+=(
         --prefix PYTHONPATH : "$out/${python3Packages.python.sitePackages}:$PYTHONPATH"
         --prefix PATH : "${lib.makeBinPath [ glib.dev ]}"
     )
-    wrapProgram $out/bin/nomm ''${makeWrapperArgs[@]}
   '';
 
   meta = {
