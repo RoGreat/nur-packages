@@ -1,5 +1,7 @@
 {
   fetchFromGitHub,
+  gettext,
+  glib,
   gobject-introspection,
   lib,
   libadwaita,
@@ -7,6 +9,7 @@
   python3Packages,
   wrapGAppsHook4,
 }:
+
 python3Packages.buildPythonApplication (finalAttrs: {
   pname = "native-open-mod-manager";
   version = "0.10.1";
@@ -20,32 +23,47 @@ python3Packages.buildPythonApplication (finalAttrs: {
   };
 
   nativeBuildInputs = [
-    gobject-introspection
     wrapGAppsHook4
+    gobject-introspection
+    gettext
+  ];
+
+  buildInputs = [
+    libadwaita
+    libnotify
   ];
 
   # https://github.com/Allexio/nomm/blob/main/build/flatpak/build-flatpak.sh
-  dependencies = [
-    libadwaita
-    libnotify
-  ]
-  ++ (with python3Packages; [
+  dependencies = with python3Packages; [
     pygobject3
     pyyaml
     rarfile
     requests
     vdf
-  ]);
+  ];
 
   # https://github.com/Allexio/nomm/blob/main/build/flatpak/com.nomm.Nomm.yaml
-  postInstall = ''
-    install src/main.py -Dm544 $out/bin/nomm
-    install build/flatpak/com.nomm.Nomm.desktop -D $out/share/applications/com.nomm.Nomm.desktop
-    install assets/nomm.png -D $out/share/icons/hicolor/64x64/apps/com.nomm.Nomm.png
+  installPhase = ''
+    runHook preInstall
+
+    mkdir -p "$out/bin"
+    echo "#!/bin/sh" > $out/bin/nomm
+    echo "exec ${python3Packages.python.interpreter} $out/${python3Packages.python.sitePackages}/main.py \"\$@\"" >> "$out/bin/nomm"
+    chmod +x "$out/bin/nomm"
+
+    install -D build/flatpak/com.nomm.Nomm.desktop $out/share/applications/com.nomm.Nomm.desktop
+    install -D build/flatpak/com.nomm.Nomm.metainfo.xml $out/share/metainfo/com.nomm.Nomm.metainfo.xml
+    install -D assets/nomm.png $out/share/icons/hicolor/64x64/apps/com.nomm.Nomm.png
+
     mkdir -p $out/${python3Packages.python.sitePackages}
     cp -r src -T $out/${python3Packages.python.sitePackages}
     cp -r assets $out/${python3Packages.python.sitePackages}
     cp -r default_game_configs $out/${python3Packages.python.sitePackages}
+
+    mkdir -p $out/share/locale/fr/LC_MESSAGES
+    msgfmt locale/fr.po -o $out/share/locale/fr/LC_MESSAGES/com.nomm.Nomm.mo
+
+    runHook postInstall
   '';
 
   dontWrapGApps = true;
@@ -54,12 +72,14 @@ python3Packages.buildPythonApplication (finalAttrs: {
     makeWrapperArgs+=(
         "''${gappsWrapperArgs[@]}"
         --prefix PYTHONPATH : "$out/${python3Packages.python.sitePackages}:$PYTHONPATH"
+        --prefix PATH : "${lib.makeBinPath [ glib.dev ]}"
     )
+    wrapProgram $out/bin/nomm ''${makeWrapperArgs[@]}
   '';
 
   meta = {
     description = "Native Open Mod Manager ";
-    homepage = "https://github.com/Allexio/nomm";
+    homepage = "https://nomm.moe";
     license = lib.licenses.gpl3Plus;
     maintainers = with lib.maintainers; [ RoGreat ];
     mainProgram = "nomm";
