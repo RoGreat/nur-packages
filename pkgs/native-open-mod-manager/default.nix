@@ -45,7 +45,9 @@ python3Packages.buildPythonApplication (finalAttrs: {
 
   postPatch = ''
     substituteInPlace src/gui/application.py \
-        --replace-fail 'copy2' 'copyfile'
+        --replace-fail 'copy2' 'copyfile' \
+        --replace-fail 'gresource_path = "resources.gresource"' \
+           'gresource_path = os.path.join(os.path.join(GLib.get_user_data_dir(), "nomm"), "resources.gresource")'
   '';
 
   # https://github.com/Allexio/nomm/blob/main/build/flatpak/com.nomm.Nomm.yaml
