@@ -6,6 +6,7 @@
   lib,
   libadwaita,
   libnotify,
+  p7zip,
   python3Packages,
   wrapGAppsHook4,
 }:
@@ -42,6 +43,11 @@ python3Packages.buildPythonApplication (finalAttrs: {
     vdf
   ];
 
+  postPatch = ''
+    substituteInPlace src/gui/application.py \
+        --replace-fail 'copy2' 'copyfile'
+  '';
+
   # https://github.com/Allexio/nomm/blob/main/build/flatpak/com.nomm.Nomm.yaml
   installPhase = ''
     runHook preInstall
@@ -69,7 +75,12 @@ python3Packages.buildPythonApplication (finalAttrs: {
   preFixup = ''
     gappsWrapperArgs+=(
         --prefix PYTHONPATH : "$out/${python3Packages.python.sitePackages}:$PYTHONPATH"
-        --prefix PATH : "${lib.makeBinPath [ glib.dev ]}"
+        --suffix PATH : "${
+          lib.makeBinPath [
+            glib.dev # glib-compile-resources
+            p7zip # 7z
+          ]
+        }"
     )
   '';
 
