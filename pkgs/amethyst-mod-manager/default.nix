@@ -3,11 +3,11 @@
   bash,
   fetchFromGitHub,
   glib,
+  cabextract,
   lib,
   libloot-python,
   meson,
   ninja,
-  protontricks,
   python3Packages,
   qt6,
   xdg-utils,
@@ -21,7 +21,7 @@ python3Packages.buildPythonApplication (finalAttrs: {
   src = fetchFromGitHub {
     owner = "RoGreat";
     repo = "Amethyst-Mod-Manager";
-    rev = "2220c4e769a9151dc48407a066a7875abcdee6d3";
+    rev = "acd073701e46cb5669d59cf2c8a5303321050a0f";
     hash = "sha256-kxvQifoQo2AZs3gpAGeXVl5J5iIQz4Nz2RYrRUd5V+g=";
   };
 
@@ -35,26 +35,25 @@ python3Packages.buildPythonApplication (finalAttrs: {
     qt6.qtbase
   ];
 
-  # https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=amethyst-mod-manager
   dependencies = [
     libloot-python
   ]
   ++ (with python3Packages; [
-    bsdiff4
-    certifi
-    cryptography
-    jeepney
-    keyring
-    lz4
-    msgpack
-    pillow
-    py7zr # fallback
+    # https://github.com/ChrisDKN/Amethyst-Mod-Manager/blob/main/src/requirements-vendor.txt
     pyside6
-    requests
-    secretstorage
-    tkinter
-    websocket-client
+    py7zr
+    libarchive-c
+    pillow
+    lz4
     zstandard
+    requests
+    websocket-client
+    keyring
+    jeepney
+    importlib-metadata
+    backports-tarfile
+    msgpack
+    bsdiff4
   ]);
 
   postPatch = ''
@@ -74,10 +73,13 @@ python3Packages.buildPythonApplication (finalAttrs: {
         "''${qtWrapperArgs[@]}"
         --suffix PATH : "${
           lib.makeBinPath [
+            # https://github.com/ChrisDKN/Amethyst-Mod-Manager/blob/main/flatpak/io.github.Amethyst.ModManager.yml
             _7zz
+            # unrar - not used
+            cabextract
+
             bash
             glib # gio, gdbus
-            protontricks
             python3Packages.python
             xdg-utils # xdg-open, xdg-mime, xdg-settings
           ]
