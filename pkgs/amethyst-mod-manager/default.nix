@@ -1,10 +1,8 @@
 {
   _7zz,
-  appstream,
   bash,
   cabextract,
   fetchFromGitHub,
-  git,
   glib,
   lib,
   libloot-python,
@@ -24,13 +22,11 @@ python3Packages.buildPythonApplication (finalAttrs: {
   src = fetchFromGitHub {
     owner = "RoGreat";
     repo = "Amethyst-Mod-Manager";
-    rev = "778bf63fb339950e412ef3afe91ec39e937c8c71";
-    hash = "sha256-+7ptTCyRymLUvOl28ZykxnMbpBMn9Df8lKq4jPVbCuw=";
+    rev = "acd073701e46cb5669d59cf2c8a5303321050a0f";
+    hash = "sha256-kxvQifoQo2AZs3gpAGeXVl5J5iIQz4Nz2RYrRUd5V+g=";
   };
 
   nativeBuildInputs = [
-    appstream
-    git
     meson
     ninja
     qt6.wrapQtAppsHook
@@ -76,13 +72,12 @@ python3Packages.buildPythonApplication (finalAttrs: {
 
   preFixup = ''
     makeWrapperArgs+=(
-        --set PYTHONPATH "$out/${python3Packages.python.sitePackages}:$PYTHONPATH"
-        --set PATH "${
+        "''${qtWrapperArgs[@]}"
+        --suffix PATH : "${
           lib.makeBinPath [
             # https://github.com/ChrisDKN/Amethyst-Mod-Manager/blob/main/flatpak/io.github.Amethyst.ModManager.yml
             _7zz
             cabextract
-            python3Packages.python
             winetricks
 
             bash
@@ -92,8 +87,6 @@ python3Packages.buildPythonApplication (finalAttrs: {
           ]
         }"
     )
-    wrapQtApp $out/bin/amethyst-mod-manager ''${makeWrapperArgs[@]}
-    wrapProgram $out/bin/amethyst-mod-manager-cli ''${makeWrapperArgs[@]}
   '';
 
   meta = {
