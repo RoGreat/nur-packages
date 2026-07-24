@@ -4,32 +4,28 @@
   cabextract,
   fetchFromGitHub,
   glib,
-  gobject-introspection,
   lib,
   libloot-python,
-  protontricks,
   python3Packages,
   qt6,
-  wrapGAppsHook3,
+  winetricks,
   xdg-utils,
 }:
 
 python3Packages.buildPythonApplication (finalAttrs: {
   pname = "amethyst-mod-manager";
-  version = "2.0.3";
+  version = "2.0.4";
   pyproject = false;
 
   src = fetchFromGitHub {
     owner = "ChrisDKN";
     repo = "Amethyst-Mod-Manager";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-jdyzXbuSXcXxgU2eckF90hYuU1URUN30y8DVM1ER4SY=";
+    hash = "sha256-z6T4aqUkFZC8Ihb26lovqzDJRQYD6H9Gna3x1OzRhLA=";
   };
 
   nativeBuildInputs = [
-    gobject-introspection
     qt6.wrapQtAppsHook
-    wrapGAppsHook3
   ];
 
   buildInputs = [
@@ -82,9 +78,6 @@ python3Packages.buildPythonApplication (finalAttrs: {
         -exec install -Dm 755 '{}' "$out/${python3Packages.python.sitePackages}/{}" \;
     popd > /dev/null
 
-    ln -s ${libloot-python}/${python3Packages.python.sitePackages}/loot/loot.cpython-314-x86_64-linux-gnu.so \
-        $out/${python3Packages.python.sitePackages}/LOOT
-
     install -d $out/bin/
 
     echo "#!/bin/sh" > $out/bin/amethyst-mod-manager
@@ -96,38 +89,32 @@ python3Packages.buildPythonApplication (finalAttrs: {
     chmod +x $out/bin/amethyst-mod-manager-cli
 
     install -Dm644 flatpak/io.github.Amethyst.ModManager.desktop $out/share/applications/io.github.Amethyst.ModManager.desktop
-    install -Dm644 src/appimage/mod-manager.png $out/share/icons/hicolor/512x512/apps/io.github.Amethyst.ModManager.png
+    install -Dm644 src/appimage/mod-manager.png $out/share/icons/hicolor/256x256/apps/io.github.Amethyst.ModManager.png
 
     install -Dm644 Changelog.txt $out/${python3Packages.python.sitePackages}/Changelog.txt
 
     runHook postInstall
   '';
 
-  dontWrapGApps = true;
   dontWrapQtApps = true;
 
   preFixup = ''
     makeWrapperArgs+=(
-        --prefix PYTHONPATH : "$out/${python3Packages.python.sitePackages}:$PYTHONPATH"
+        --set PYTHONPATH "$out/${python3Packages.python.sitePackages}:$PYTHONPATH"
         --suffix PATH : "${
           lib.makeBinPath [
             # https://github.com/ChrisDKN/Amethyst-Mod-Manager/blob/main/flatpak/io.github.Amethyst.ModManager.yml
             _7zz
-            cabextract
-            winetricks
-
             bash
+            cabextract
             glib # gio, gdbus
             python3Packages.python
+            winetricks
             xdg-utils # xdg-open, xdg-mime, xdg-settings
           ]
         }"
     )
-    qtWrapperArgs+=(
-        "''${makeWrapperArgs[@]}"
-        "''${gappsWrapperArgs[@]}"
-    )
-    wrapQtApp $out/bin/amethyst-mod-manager
+    wrapQtApp $out/bin/amethyst-mod-manager "''${makeWrapperArgs[@]}"
     wrapProgram $out/bin/amethyst-mod-manager-cli "''${makeWrapperArgs[@]}"
   '';
 
@@ -137,6 +124,6 @@ python3Packages.buildPythonApplication (finalAttrs: {
     license = lib.licenses.gpl3Plus;
     maintainers = with lib.maintainers; [ RoGreat ];
     mainProgram = "amethyst-mod-manager";
-    platforms = lib.platforms.linux;
+    platforms = [ "x86_64-linux" ];
   };
 })
