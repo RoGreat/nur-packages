@@ -1,6 +1,5 @@
 {
   _7zz,
-  appstream,
   bash,
   cabextract,
   fetchFromGitHub,
@@ -29,7 +28,6 @@ python3Packages.buildPythonApplication (finalAttrs: {
   };
 
   nativeBuildInputs = [
-    appstream
     git
     meson
     ninja
@@ -81,10 +79,6 @@ python3Packages.buildPythonApplication (finalAttrs: {
           lib.makeBinPath [
             # https://github.com/ChrisDKN/Amethyst-Mod-Manager/blob/main/flatpak/io.github.Amethyst.ModManager.yml
             _7zz
-            cabextract
-            python3Packages.python
-            winetricks
-
             bash
             glib # gio, gdbus
             python3Packages.python
