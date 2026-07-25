@@ -23,8 +23,8 @@ python3Packages.buildPythonApplication (finalAttrs: {
   src = fetchFromGitHub {
     owner = "RoGreat";
     repo = "Amethyst-Mod-Manager";
-    rev = "8c49d8caf72a5611ce160fdef130642b275c7924";
-    hash = "sha256-VJj+mWMPWC5JFDB4O+DLwJuACeaPs/JA0h2um07KpJY=";
+    rev = "67e18b157ae6779c21f79c815c83cb03eb85289a";
+    hash = "sha256-uswEwF4LehlW5JWL329CNiw/HWw0LkAq1SI8WCrI7VI=";
   };
 
   nativeBuildInputs = [
