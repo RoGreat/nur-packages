@@ -17,14 +17,14 @@
 
 python3Packages.buildPythonApplication (finalAttrs: {
   pname = "amethyst-mod-manager";
-  version = "2.0.5-beta.4";
+  version = "2.0.5-beta.6";
   pyproject = false;
 
   src = fetchFromGitHub {
-    owner = "RoGreat";
+    owner = "ChrisDKN";
     repo = "Amethyst-Mod-Manager";
-    rev = "67e18b157ae6779c21f79c815c83cb03eb85289a";
-    hash = "sha256-uswEwF4LehlW5JWL329CNiw/HWw0LkAq1SI8WCrI7VI=";
+    tag = "v${finalAttrs.version}";
+    hash = "sha256-rY3Ql/AKkPwJB2q6ZgbhoLgRn6nvUfavsnsTSPAGB8Y=";
   };
 
   nativeBuildInputs = [
@@ -57,6 +57,8 @@ python3Packages.buildPythonApplication (finalAttrs: {
   ]);
 
   postPatch = ''
+    patchShebangs src/version.py
+
     substituteInPlace src/Utils/protontricks.py \
         --replace-fail '_get_tools_dir() / "winetricks"' 'Path("${lib.getExe winetricks}")' \
         --replace-fail '_get_tools_dir() / "cabextract"' 'Path("${lib.getExe cabextract}")'
@@ -72,7 +74,7 @@ python3Packages.buildPythonApplication (finalAttrs: {
   preFixup = ''
     makeWrapperArgs+=(
         --set PYTHONPATH "$out/${python3Packages.python.sitePackages}:$PYTHONPATH"
-        --set PATH "${
+        --suffix PATH : "${
           lib.makeBinPath [
             # https://github.com/ChrisDKN/Amethyst-Mod-Manager/blob/main/flatpak/io.github.Amethyst.ModManager.yml
             _7zz
