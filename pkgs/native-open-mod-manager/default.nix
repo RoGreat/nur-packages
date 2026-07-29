@@ -100,6 +100,9 @@ python3Packages.buildPythonApplication (finalAttrs: {
     )
   '';
 
+  # no tests
+  doCheck = false;
+
   meta = {
     description = "Native Open Mod Manager ";
     homepage = "https://nomm.moe";
