@@ -3,6 +3,10 @@
     "slug": "livemarks"
   },
   {
-    "slug": "soundfixer"
+    "slug": "soundfixer",
+    "license": {
+      "tag": "predefined",
+      "shortName": "unlicense"
+    }
   }
 ]

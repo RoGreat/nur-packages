@@ -36,6 +36,7 @@
       {
         homepage = "https://github.com/valpackett/soundfixer";
         description = "Helps you fix annoying sound problems on sites like YouTube: audio in one channel only, too quiet or too loud.\n\n(Unfortunately, this extension does not work on all websites because of cross-domain issues — but it does work on YouTube!)";
+        license = licenses.unlicense;
         mozPermissions = [ "activeTab" "webNavigation" ];
         platforms = platforms.all;
       };
