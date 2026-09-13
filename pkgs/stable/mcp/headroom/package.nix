@@ -45,8 +45,17 @@ python3Packages.buildPythonApplication (finalAttrs: {
     uvicorn
   ];
 
-  # has no tests
-  doCheck = false;
+  nativeCheckInputs = with python3Packages; [
+    pytestCheckHook
+    pytest-cov
+    pytest-asyncio
+
+    fastapi
+    numpy
+    opentelemetry-sdk
+    respx
+    websockets
+  ];
 
   pythonImportsCheck = [ "headroom" ];
 
