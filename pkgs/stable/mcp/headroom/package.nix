@@ -57,7 +57,9 @@ python3Packages.buildPythonApplication (finalAttrs: {
     websockets
   ];
 
-  pythonImportsCheck = [ "headroom" ];
+  pythonImportsCheck = [
+    "headroom"
+  ];
 
   __structuredAttrs = true;
 
