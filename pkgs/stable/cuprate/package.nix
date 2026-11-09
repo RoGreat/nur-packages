@@ -6,6 +6,7 @@
   openssl,
   pkg-config,
   rustPlatform,
+  sqlite,
 }:
 
 rustPlatform.buildRustPackage (finalAttrs: {
@@ -42,6 +43,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
 
   buildInputs = [
     openssl
+    sqlite
   ];
 
   preCheck = ''
